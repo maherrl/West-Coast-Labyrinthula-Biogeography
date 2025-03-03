@@ -283,52 +283,6 @@ saveRDS(seqtab.nochim.all, "./dada2_seqtab.nochim.all.rc.RDS")
 head(seqtab.nochim.all)
 seqtab.nochim.all <- readRDS("./All_Plates/dada2_seqtab.nochim.all.rc.RDS")
 
-
-
-# ### Taxonomy ### OLD - TAXONOMY NOW ASSIGNED IN QIIME2
-# ## creating a DNAStringSet object from the ASVs
-# dna_18S <- DNAStringSet(getSequences(seqtab.nochim.all))
-# 
-# ## downloading silva DECIPHER database
-# download.file("http://www2.decipher.codes/Classification/TrainingSets/SILVA_SSU_r138_2019.RData", "SILVA_SSU_r138_2019.RData")
-# # loading ref taxonomy object
-# load("SILVA_SSU_r138_2019.RData")
-# 
-# 
-# tax_info_18S <- IdTaxa(dna_18S, trainingSet, strand = "both", processors = NULL)
-# tax_info_18S
-# saveRDS(tax_info_18S, file = "./All_Plates/tax_info_18S.RDS")
-# tax_info_18S <- readRDS(file = "./All_Plates/tax_info_18S.RDS")
-# 
-# ## making and writing out standard output files:
-# # giving our seq headers more manageable names (ASV_1, ASV_2...)
-# asv_seqs_18S <- colnames(seqtab.nochim.all)
-# 
-# asv_headers_18S <- vector(dim(seqtab.nochim.all)[2], mode = "character")
-# for (i in 1:dim(seqtab.nochim.all)[2]) {
-#   asv_headers_18S[i] <- paste(">ASV_18S", i, sep = "_")
-# }
-# 
-# # tax table:
-# # creating vector of desired ranks
-# ranks <- c("rootrank", "domain", "major_clade", "kingdom", "phylum", "family", "genus")
-# 
-# # creating table of taxonomy and setting any that are unclassified as "NA"
-# tax_tab_18S <- t(sapply(tax_info_18S, function(x) {
-#   m <- match(ranks, x$rank)
-#   taxa <- x$taxon[m]
-#   taxa[startsWith(taxa, "unclassified_")] <- NA
-#   taxa
-# }))
-# 
-# colnames(tax_tab_18S) <- ranks
-# row.names(tax_tab_18S) <- sub(">", "", asv_headers_18S)
-# tax_tab_18S <- as.data.frame(tax_tab_18S)
-# tax_tab_18S$rootrank <- rownames(tax_tab_18S)
-# tax_tab_18S <- as.matrix(tax_tab_18S)
-# saveRDS(tax_tab_18S, file = "./All_Plates/tax_tab_18S.RDS")
-# tax_tab_18S <- readRDS(file = "./All_Plates/tax_tab_18S.RDS")
-
 # fasta:
 asv_fasta_18S <- c(rbind(asv_headers_18S, asv_seqs_18S))
 write(asv_fasta_18S, "./All_Plates/18S_ASVs.fa")
@@ -392,14 +346,4 @@ ps
 ## saving the seqtab.nochim_18S object
 saveRDS(ps, "./All_Plates/ps_18S_lulu.RDS")
 ps <- readRDS("./All_Plates/ps_18S_lulu.RDS")
-
-## suggested filtering
-# remove samples not in the project
-ps <- subset_samples(ps, Person!="Olivia")
-# remove non-target taxa
-ps = subset_taxa(ps, (domain!="Bacteria") | is.na(domain)) #161 Bacteria taxa
-ps = subset_taxa(ps, (kingdom!="Chloroplastida") | is.na(kingdom)) #42 Chloroplastida taxa
-ps = subset_taxa(ps, (kingdom!="Animalia" | is.na(kingdom)))
-# or #
-ps = subset_taxa(ps, (kingdom=="Stramenopiles" | is.na(kingdom)))
 ps
