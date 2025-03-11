@@ -39,6 +39,8 @@ ps = subset_taxa(ps, (phylum!="Ochrophyta" | is.na(phylum))) #5
 ps
 ps = subset_taxa(ps, (genus!="Aplanochytrium" | is.na(genus))) #46
 ps
+ps = subset_taxa(ps, (domain!="Unassigned") | is.na(domain)) #276 Unassigned taxa
+ps #127 taxa by 209 samples
 
 PS = filter_taxa(ps, function(x) sum(x > 2) > (0.01*length(x)), TRUE)
 PS
