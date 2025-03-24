@@ -40,10 +40,11 @@ ps
 ps = subset_taxa(ps, (genus!="Aplanochytrium" | is.na(genus))) #46
 ps
 ps = subset_taxa(ps, (domain!="Unassigned") | is.na(domain)) #276 Unassigned taxa
-ps #127 taxa by 209 samples
+ps <- prune_samples(sample_sums(ps) >= 383, ps)
+ps <- prune_taxa(taxa_sums(ps) > 0, ps)
+ps #95 taxa by 190 samples
 
-PS = filter_taxa(ps, function(x) sum(x > 2) > (0.01*length(x)), TRUE)
-PS
+PS <- ps
 
 # Crescent vs non-crescent
 taxa_info <- data.frame(tax_table(PS))
