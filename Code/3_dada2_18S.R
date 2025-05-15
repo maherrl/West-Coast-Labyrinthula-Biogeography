@@ -283,7 +283,15 @@ saveRDS(seqtab.nochim.all, "./dada2_seqtab.nochim.all.rc.RDS")
 head(seqtab.nochim.all)
 seqtab.nochim.all <- readRDS("./All_Plates/dada2_seqtab.nochim.all.rc.RDS")
 
-# fasta:
+# fasta file for input into LULU:
+# giving our seq headers more manageable names (ASV_1, ASV_2...)
+asv_seqs_18S <- colnames(seqtab.nochim.all)
+
+asv_headers_18S <- vector(dim(seqtab.nochim.all)[2], mode = "character")
+for (i in 1:dim(seqtab.nochim.all)[2]) {
+  asv_headers_18S[i] <- paste(">ASV_18S", i, sep = "_")
+}
+
 asv_fasta_18S <- c(rbind(asv_headers_18S, asv_seqs_18S))
 write(asv_fasta_18S, "./All_Plates/18S_ASVs.fa")
 
